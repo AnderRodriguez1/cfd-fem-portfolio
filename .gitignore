@@ -1,0 +1,56 @@
+# ==================================
+# OpenFOAM generated files
+# ==================================
+
+# Simulation time directories
+# Preserve the initial conditions directory 0/
+**/[1-9]*/
+**/0.[0-9]*/
+
+# Generated mesh
+**/constant/polyMesh/
+
+# Parallel computation
+**/processor*/
+**/processors*/
+
+# Post-processing
+**/postProcessing/
+**/VTK/
+
+# Generated ParaView marker files
+*.foam
+*.OpenFOAM
+
+# Simulation logs
+log.*
+*.log
+
+# Generated visualization data
+*.vtk
+*.vtp
+*.vtu
+*.vtu.series
+
+# OpenFOAM dynamic code
+**/dynamicCode/
+
+# ==================================
+# Python
+# ==================================
+
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# ==================================
+# Editors and operating systems
+# ==================================
+
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
