@@ -40,8 +40,8 @@ and execution of an OpenFOAM case.
 - [x] Role of checkMesh
 - [x] Difference between fvSchemes and fvSolution
 - [x] Basic boundary conditions
-- [ ] Physical meaning of k and epsilon
-- [ ] Understanding simulation output directories
+- [x] Physical meaning of k and epsilon
+- [x] Understanding simulation output directories
 
 ## 5. Problems and solutions
 
@@ -55,9 +55,9 @@ Use the native Windows installation of ParaView.
 
 ## 6. Pending tasks
 
-- [ ] Understand k-epsilon turbulence model
+- [x] Understand k-epsilon turbulence model
 - [ ] Identify simulation time directories
-- [ ] Review the results in ParaView for Windows
+- [x] Review the results in ParaView for Windows
 - [ ] Consolidate the pitzDailySteady fundamentals
 
 ## 7. Next milestone
@@ -65,3 +65,74 @@ Use the native Windows installation of ParaView.
 Understand the existing simulation results and complete
 the fundamental OpenFOAM exercises before starting
 the laminar cylinder CFD project.
+
+## Project 02A – Laminar Flow Around a Cylinder
+
+### Mesh generation and validation
+
+- Mesh generated using Gmsh 4.13.1 and imported into OpenFOAM Foundation 14 using `gmshToFoam`.
+- 2D computational domain represented by a thin extruded mesh with one cell layer in the z-direction.
+- `frontAndBack` patch configured as `empty`.
+- Final mesh:
+  - Cells: 62,634
+  - Points: 62,962
+  - Faces: 219,383
+  - Maximum aspect ratio: 2.49
+  - Maximum non-orthogonality: 41.83°
+  - Average non-orthogonality: 7.06°
+  - Maximum skewness: 0.649
+- `checkMesh` completed successfully (`Mesh OK`).
+
+**Mesh limitation:** The current mesh does not contain a structured boundary-layer refinement. Its adequacy for resolving near-wall gradients must be assessed through a mesh-independence study.
+
+### Initial transient simulation
+
+- Solver: `foamRun` with `incompressibleFluid`.
+- Flow model: laminar, incompressible, transient.
+- Reynolds number: 100.
+- Number of cells: 62,634.
+- Time step: 0.001 s.
+- Simulation end time: 1.0 s.
+- Number of time steps: 1,000.
+- Serial execution completed successfully.
+
+**Initial numerical observation:** Maximum Courant number reached approximately 2.18. Temporal resolution requires further investigation.
+
+### MPI parallelisation benchmark
+
+Hardware:
+- CPU: AMD Ryzen 9 5900HX.
+- Physical cores: 8.
+- Logical CPUs: 16.
+- MPI implementation: Open MPI 4.1.2.
+
+Decomposition:
+- Method: `scotch`.
+- Number of subdomains: 4.
+- Total cells: 62,634.
+- Average cells per subdomain: 15,658.5.
+- Maximum load imbalance: 0.278%.
+
+Benchmark configuration:
+- Simulation interval: 0–0.1 s.
+- Time step: 0.001 s.
+- Time steps: 100.
+- Identical mesh and numerical settings for serial and parallel runs.
+
+| Configuration | Clock time |
+|---|---:|
+| Serial (1 process) | 164 s |
+| MPI (4 processes) | 48 s |
+
+- Speedup: 3.42.
+- Parallel efficiency: 85.5%.
+
+**Conclusion:** Four MPI processes provide a substantial performance improvement for the current mesh. Additional benchmarks with 6 and 8 processes are planned to investigate parallel scaling.
+
+### Pending numerical validation
+
+- Investigate temporal resolution and Courant number.
+- Assess mesh independence.
+- Verify vortex shedding and periodic flow behaviour.
+- Calculate drag coefficient (Cd), lift coefficient (Cl) and Strouhal number (St).
+- Evaluate pressure solver performance and possible preconditioner alternatives.
