@@ -129,6 +129,35 @@ Benchmark configuration:
 
 **Conclusion:** Four MPI processes provide a substantial performance improvement for the current mesh. Additional benchmarks with 6 and 8 processes are planned to investigate parallel scaling.
 
+### MPI scaling study
+
+Additional benchmarks were performed using 6 and 8 MPI processes.
+
+All configurations used:
+- Identical mesh (62,634 cells).
+- Identical physical and numerical settings.
+- Simulation interval: 0–0.1 s.
+- Time step: 0.001 s.
+- 100 time steps.
+- Scotch domain decomposition.
+
+Performance results based on OpenFOAM `ExecutionTime`:
+
+| MPI processes | Execution time (s) | Speedup | Parallel efficiency |
+|---:|---:|---:|---:|
+| 1 | 163.041 | 1.00 | 100.0% |
+| 4 | 47.324 | 3.45 | 86.1% |
+| 6 | 42.257 | 3.86 | 64.3% |
+| 8 | 36.047 | 4.52 | 56.5% |
+
+The 8-process configuration achieved the lowest execution time, reducing computational time by approximately 77.9% compared with the serial run.
+
+However, parallel efficiency decreased as the number of MPI processes increased. Four processes provided the highest parallel efficiency among the tested parallel configurations.
+
+**Conclusion:** For the current mesh and hardware, 8 MPI processes are the fastest tested configuration, while 4 processes provide better parallel efficiency. The optimal configuration may change with mesh size and computational workload.
+
+**Benchmark limitation:** Each configuration was measured once. Repeated runs and median execution times would be required for a more rigorous performance assessment.
+
 ### Pending numerical validation
 
 - Investigate temporal resolution and Courant number.
